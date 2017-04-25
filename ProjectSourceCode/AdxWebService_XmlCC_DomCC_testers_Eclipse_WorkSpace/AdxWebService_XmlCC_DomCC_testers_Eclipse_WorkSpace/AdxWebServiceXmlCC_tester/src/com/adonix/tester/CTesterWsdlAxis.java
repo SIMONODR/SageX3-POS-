@@ -1,0 +1,343 @@
+package com.adonix.tester;
+
+import com.adonix.tracecli.CTraceCli;
+import com.adonix.tracecli.CTraceCliChanel;
+import com.adonix.tracecli.CTracerNull;
+import com.adonix.tracecli.ITracer;
+import com.adonix.wsvc.CActivityViewer;
+import com.adonix.wsvc.CActivityViewerConsole;
+import com.adonix.wsvc.CServiceAdxCallContext;
+import com.adonix.wsvc.CServiceAdxResult;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
+/**
+ * @author Adonix Grenoble
+ * 
+ */
+public class CTesterWsdlAxis
+{
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args)
+	{
+		try
+		{
+			CTesterWsdlAxis wTester = new CTesterWsdlAxis(args);
+			wTester.run();
+			wTester.destroy();
+			waitLine();
+		}
+		catch (Exception e)
+		{
+			System.out.println(e);
+		}
+	}
+
+	/**
+	 * 
+	 */
+	private static void waitLine() throws Exception
+	{
+		System.out.println("Enter to continue...");
+		BufferedReader wInput = new BufferedReader(new InputStreamReader(System.in));
+		String wLine = wInput.readLine();
+	}
+
+	private CActivityViewer pActivityViewer;
+
+	private boolean pActivityViewerOn;
+
+	private CTesterArguments pTesterArguments;
+
+	private CTraceCli pTraceCli = null;
+
+	private CTraceCliChanel pTraceCliChanel = null;
+
+	private ITracer pTracer = CTracerNull.getInstance();
+
+	/**
+	 * @param aArguments
+	 */
+	CTesterWsdlAxis(String[] aArguments)
+	{
+		pActivityViewer = new CActivityViewerConsole();
+		pActivityViewerOn = (pActivityViewer != null && pActivityViewer.isTraceOn());
+
+		pTesterArguments = new CTesterArguments(pActivityViewer, aArguments);
+
+		initTraceCli();
+
+		if (pActivityViewerOn)
+			pActivityViewer.traceWrite("new TesterWsdlAxis ok");
+	}
+
+	/**
+	 * @param aAViewerInTrace
+	 * @throws Exception
+	 */
+	void callListOaus(CActivityViewer aAViewerInTrace) throws Exception
+	{
+		boolean wActivityViewerOn = (aAViewerInTrace != null && aAViewerInTrace.isTraceOn());
+		if (wActivityViewerOn)
+			aAViewerInTrace.traceBeginStep("callListOaus");
+
+		CServiceAdxCallContext wCtx = createCallContext(aAViewerInTrace);
+
+		String wUrl = createUrlRoot();
+
+		CStubListOaus wStubListOaus = new CStubListOaus(aAViewerInTrace, wUrl, wCtx);
+
+		if (wActivityViewerOn)
+			aAViewerInTrace.traceWriteDescr("=== StubListOaus", wStubListOaus.toString());
+
+		CServiceAdxResult wAdxResultXml = null;
+
+		if (wActivityViewerOn)
+			aAViewerInTrace.traceWrite("=== StubListOaus getUsers()");
+		wAdxResultXml = wStubListOaus.getUsers("A*", 10);
+		dumpResult(aAViewerInTrace, wAdxResultXml);
+
+		if (wActivityViewerOn)
+			aAViewerInTrace.traceWrite("=== StubListOaus getDescription()");
+		wAdxResultXml = wStubListOaus.getDescription();
+		dumpResult(aAViewerInTrace, wAdxResultXml);
+
+		if (wActivityViewerOn)
+			aAViewerInTrace.traceEndStep();
+	}
+
+	/**
+	 * @param aAViewerInTrace
+	 * @throws Exception
+	 */
+	void callObjectOaus(CActivityViewer aAViewerInTrace) throws Exception
+	{
+		boolean wActivityViewerOn = (aAViewerInTrace != null && aAViewerInTrace.isTraceOn());
+		if (wActivityViewerOn)
+			aAViewerInTrace.traceBeginStep("callObjOaus");
+
+		CServiceAdxCallContext wCtx = createCallContext(aAViewerInTrace);
+
+		String wUrl = createUrlRoot();
+
+		CStubObjectOaus wStubObjectOaus = new CStubObjectOaus(aAViewerInTrace, wUrl, wCtx);
+
+		if (wActivityViewerOn)
+			aAViewerInTrace.traceWriteDescr("=== StubObjectOaus", wStubObjectOaus.toString());
+
+		CServiceAdxResult wAdxResultXml = null;
+
+		if (wActivityViewerOn)
+			aAViewerInTrace.traceWrite("=== StubObjectOaus readUser()");
+		wAdxResultXml = wStubObjectOaus.readUser("qsdfqsdfqsdf");
+		dumpResult(aAViewerInTrace, wAdxResultXml);
+
+		if (wActivityViewerOn)
+			aAViewerInTrace.traceWrite("=== StubObjectOaus saveUser()");
+		wAdxResultXml = wStubObjectOaus.saveUser("");
+		dumpResult(aAViewerInTrace, wAdxResultXml);
+
+		if (wActivityViewerOn)
+			aAViewerInTrace.traceWrite("=== StubObjectOaus modifyUser()");
+		wAdxResultXml = wStubObjectOaus.modifyUser("sdfgsdfgsdfgsdfg", "");
+		dumpResult(aAViewerInTrace, wAdxResultXml);
+
+		if (wActivityViewerOn)
+			aAViewerInTrace.traceWrite("=== StubObjectOaus deleteUser()");
+		wAdxResultXml = wStubObjectOaus.deleteUser("sdfgsdfgsdfgsdfg");
+		dumpResult(aAViewerInTrace, wAdxResultXml);
+
+		if (wActivityViewerOn)
+			aAViewerInTrace.traceWrite("=== StubObjectOaus actionTestOnUser()");
+		wAdxResultXml = wStubObjectOaus.actionTestOnUser("wxcwcwxcwxcwxcwxc");
+		dumpResult(aAViewerInTrace, wAdxResultXml);
+
+		if (wActivityViewerOn)
+			aAViewerInTrace.traceWrite("=== StubObjectOaus actionTestOnUserWithData()");
+		wAdxResultXml = wStubObjectOaus.actionTestOnUserWithData("");
+		dumpResult(aAViewerInTrace, wAdxResultXml);
+
+		if (wActivityViewerOn)
+			aAViewerInTrace.traceWrite("=== StubObjectOaus getDescription()");
+		wAdxResultXml = wStubObjectOaus.getDescription();
+		dumpResult(aAViewerInTrace, wAdxResultXml);
+
+		if (wActivityViewerOn)
+			aAViewerInTrace.traceEndStep();
+	}
+
+	/**
+	 * @param aAViewerInTrace
+	 * @throws Exception
+	 */
+	void callQlfWsSlp(CActivityViewer aAViewerInTrace) throws Exception
+	{
+		boolean wActivityViewerOn = (aAViewerInTrace != null && aAViewerInTrace.isTraceOn());
+		if (wActivityViewerOn)
+			aAViewerInTrace.traceBeginStep("callQlfWsSlp");
+
+		CServiceAdxCallContext wCtx = createCallContext(aAViewerInTrace);
+
+		String wUrl = createUrlRoot();
+
+		CStubSpgmQlfWsSlp wStubSpgmQlfWsSlp = new CStubSpgmQlfWsSlp(aAViewerInTrace, wUrl, wCtx);
+
+		if (wActivityViewerOn)
+			aAViewerInTrace.traceWriteDescr("=== StubSpgmQlfWsSlp", wStubSpgmQlfWsSlp.toString());
+
+		CServiceAdxResult wAdxResultXml = null;
+
+		if (wActivityViewerOn)
+			aAViewerInTrace.traceWrite("==== StubSpgmQlfWsSlp sleep()");
+		wAdxResultXml = wStubSpgmQlfWsSlp.sleep(2);
+		dumpResult(aAViewerInTrace, wAdxResultXml);
+
+		if (wActivityViewerOn)
+			aAViewerInTrace.traceWrite("==== StubSpgmQlfWsSlp getDescription()");
+		wAdxResultXml = wStubSpgmQlfWsSlp.getDescription();
+		dumpResult(aAViewerInTrace, wAdxResultXml);
+
+		if (wActivityViewerOn)
+			aAViewerInTrace.traceEndStep();
+	}
+
+	/**
+	 * @param aAViewerInTrace
+	 * @return
+	 */
+	private CServiceAdxCallContext createCallContext(CActivityViewer aAViewerInTrace)
+	{
+		String wCodeLang = pTesterArguments.pWsvcLang;
+		String wCodeUser = pTesterArguments.pWsvcUser;
+		String wPassword = pTesterArguments.pWsvcPass;
+		String wPoolAlias = pTesterArguments.pWsvcAlias;
+		String wRequestConfig = pTesterArguments.pWsvcConfig;
+
+		return CServiceAdxCallContext.buildAdxCallContext(aAViewerInTrace, wCodeLang, wCodeUser, wPassword, wPoolAlias,
+				wRequestConfig);
+	}
+
+	/**
+	 * @return
+	 */
+	private CActivityViewer createRequestActivityViewer()
+	{
+		CActivityViewer wActivityViewer = null;
+		if (pTesterArguments.pViewActivityOn)
+		{
+			if (pTesterArguments.pTraceOn)
+				wActivityViewer = new CActivityViewerTraceCli(getTracer());
+			else
+				wActivityViewer = new CActivityViewerConsole();
+			if (pTesterArguments.pViewSoapOn)
+				CActivityViewer.setPostFormActivityViewer(wActivityViewer);
+		}
+		return wActivityViewer;
+	}
+
+	/**
+	 * @return
+	 */
+	private String createUrlRoot()
+	{
+		StringBuilder wSB = new StringBuilder();
+		wSB.append("http://");
+		wSB.append(pTesterArguments.pWsvcHost);
+		wSB.append('/');
+		wSB.append(pTesterArguments.pWsvcPath);
+		return wSB.toString();
+	}
+
+	/**
+	 * 
+	 */
+	private void destroy()
+	{
+		if (pTraceCli != null)
+		{
+			pTraceCli.destroyAllChanels();
+			pTraceCli = null;
+			pTraceCliChanel = null;
+			pTracer = CTracerNull.getInstance();
+		}
+	}
+
+	/**
+	 * @param aAViewerInTrace
+	 * @param aAdxResultXml
+	 */
+	private void dumpResult(CActivityViewer aAViewerInTrace, CServiceAdxResult aAdxResultXml)
+	{
+		boolean wActivityViewerOn = (aAViewerInTrace != null && aAViewerInTrace.isTraceOn());
+		if (wActivityViewerOn)
+		{
+			aAViewerInTrace.traceBeginStep("dumpResult");
+			aAViewerInTrace.traceWrite(aAdxResultXml.dump());
+			aAViewerInTrace.traceEndStep();
+		}
+	}
+
+	/**
+	 * @return
+	 */
+	private ITracer getTracer()
+	{
+		return pTracer;
+	}
+
+	/**
+	 * 
+	 */
+	private void initTraceCli()
+	{
+		if (pActivityViewerOn)
+			pActivityViewer.traceBeginStep("initTraceCli");
+		if (pTesterArguments.pTraceOn)
+		{
+			pTraceCli = new CTraceCli("AXISCLI", true, pTesterArguments.pTraceHost, pTesterArguments.pTracePort,
+					pTesterArguments.pTraceLevel);
+			pTraceCliChanel = pTraceCli.newChanel(true, "AXISCLI", pTesterArguments.pTraceLevel);
+			pTracer = pTraceCliChanel;
+			if (pActivityViewerOn)
+				pActivityViewer.traceWriteDescr("TraceCli", pTraceCli.toStringDescrFull());
+		}
+		if (pActivityViewerOn)
+			pActivityViewer.traceEndStep();
+	}
+
+	/**
+	 * 
+	 */
+	void run()
+	{
+		if (pActivityViewerOn)
+			pActivityViewer.traceBeginStep("run");
+		try
+		{
+			CActivityViewer wActivityViewer = createRequestActivityViewer();
+
+			if (pActivityViewerOn)
+				pActivityViewer.traceWrite("++++ callQlfWsSlp");
+			callQlfWsSlp(wActivityViewer);
+
+			if (pActivityViewerOn)
+				pActivityViewer.traceWrite("++++ callOausList");
+			callListOaus(wActivityViewer);
+
+			if (pActivityViewerOn)
+				pActivityViewer.traceWrite("++++ callOausObj");
+			callObjectOaus(wActivityViewer);
+
+		}
+		catch (Exception e)
+		{
+			if (pActivityViewerOn)
+				pActivityViewer.traceWrite(e.toString());
+		}
+		if (pActivityViewerOn)
+			pActivityViewer.traceEndStep();
+	}
+
+}

@@ -1,0 +1,59 @@
+package com.adonix.wsvc;
+
+import com.adonix.wsvc.stubs.CAdxCallContext;
+
+public class CServiceAdxCallContext extends CAdxCallContext {
+
+
+    public static CServiceAdxCallContext buildAdxCallContext(CActivityViewer aActivityViewer, String aCodeLang, String aCodeUser, String aPassword, String aPoolAlias, String aRequestConfig)
+	{ 
+		boolean wActivityViewerOn = (aActivityViewer!=null && aActivityViewer.isTraceOn());
+		if (wActivityViewerOn)aActivityViewer.traceBeginStep("buildCallingContext");
+
+        CAdxCallContext wAdxCallContext = new CAdxCallContext();
+        wAdxCallContext.setCodeLang( aCodeLang);
+        wAdxCallContext.setCodeUser ( aCodeUser);
+        wAdxCallContext.setPassword ( aPassword);
+        wAdxCallContext.setPoolAlias ( aPoolAlias);
+        wAdxCallContext.setRequestConfig ( aRequestConfig);
+
+        CServiceAdxCallContext wServiceAdxCallContext = new CServiceAdxCallContext(wAdxCallContext);
+		if (wActivityViewerOn)
+		{
+            aActivityViewer.traceWrite(wServiceAdxCallContext.dump());
+			aActivityViewer.traceEndStep();
+		}
+        return wServiceAdxCallContext;
+	}
+
+    private CAdxCallContext pAdxCallContext;
+
+    CServiceAdxCallContext(CAdxCallContext aAdxCallContext)
+    {
+        pAdxCallContext = aAdxCallContext;
+        setCodeLang( pAdxCallContext.getCodeLang());
+        setCodeUser ( pAdxCallContext.getCodeUser());
+        setPassword ( pAdxCallContext.getPassword());
+        setPoolAlias ( pAdxCallContext.getPoolAlias());
+        setRequestConfig ( pAdxCallContext.getRequestConfig());
+    }
+	public  String dump()
+	{
+		StringBuffer wSB = new StringBuffer();
+		wSB.append("codeLang=[").Append(this.getCodeLang()).Append(']');
+		wSB.append('\n');
+		wSB.append("codeUser=[").Append(this.getCodeUser()).Append(']');
+		wSB.append('\n');
+		wSB.append("password=[").Append(this.getPassword()).Append(']');
+		wSB.append('\n');
+		wSB.append("poolAlias=[").Append(this.getPoolAlias()).Append(']');
+		wSB.append('\n');
+		wSB.append("requestConfig=[").Append(this.getRequestConfig()).Append(']');
+		return wSB.toString();
+	}
+
+    public CAdxCallContext getAdxCallContext()
+    {
+        return pAdxCallContext;
+    }
+}

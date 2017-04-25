@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<project name="AdxWebServicesXmlCC"    default="all" basedir=".">
+	<!-- SERVEUR -->
+
+	<target name="init">
+		<property name="project.name"     value="AdxWebServiceXmlCC_tester"/>
+
+	</target>
+
+	<target name="wsgenjava_services_all" depends="init" >
+		<antcall target="wsgenservices">
+			<param name="stubid" value="CAdxWebServiceDomCC"/>
+		</antcall>
+	</target>
+
+	<target name="all" depends="wsgenjava_services_all" />
+
+	<!-- 
+	To declare the tasks, set up a classpath to include the axis task JAR and all 
+	the dependent libraries. Including everything in the axis lib directory should suffice 
+	-->
+	<path id="axis.classpath">
+		<!-- fileset dir="../axis-1_4/lib" -->
+		<fileset dir="../axis2-1_0/lib">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+	<!-- 
+	Then use the <taskdef> declaration to declare all the tasks listed in a properties 
+	file inside the axis-ant.jar file:
+	-->
+	<taskdef resource="axis-tasks.properties" classpathref="axis.classpath" />
+	
+	<target name="wsgenservices" depends="init">
+		<property name="stubwsdl" value="${stubid}.wsdl"/>
+		<echo message="Project=[${project.name}] -- generate stub classes from [${stubwsdl}] " />
+		<axis-wsdl2java 
+			output="./src"
+			verbose="true"
+			url="./wsdl/${stubwsdl}"
+			serverside="true"
+			skeletondeploy="true"
+			deployscope="Application"
+			debug="false" >
+			<mapping namespace="http://www.adonix.com/WSS" package="com.adonix.wsvc.stubs"/>
+		</axis-wsdl2java>
+	</target>
+
+</project>

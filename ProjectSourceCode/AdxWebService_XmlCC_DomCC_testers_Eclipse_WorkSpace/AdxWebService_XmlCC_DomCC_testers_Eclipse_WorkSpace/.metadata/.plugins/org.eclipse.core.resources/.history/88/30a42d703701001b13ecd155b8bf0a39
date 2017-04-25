@@ -1,0 +1,8 @@
+package com.adonix.wsvc;
+
+public class CServiceAdx {
+	boolean pActivityViewerOn;
+	CActivityViewer pActivityViewer;
+	String pObjId;
+	String pEndpointAddress;
+}

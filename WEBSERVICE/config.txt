@@ -1,0 +1,11 @@
+X3 server name=?10.8.5.251:28880?
+X3 poolname=?SCONN?
+X3 Lang=?ENG?
+X3 User=?ADMIN?
+X3 password=??
+Sql Server name=?10.8.5.251?
+Sql User=?sa?
+Sql Password=?tiger2015.?
+Sales order=?Y?
+Work Order=?N?
+Sales Invoice=?N?

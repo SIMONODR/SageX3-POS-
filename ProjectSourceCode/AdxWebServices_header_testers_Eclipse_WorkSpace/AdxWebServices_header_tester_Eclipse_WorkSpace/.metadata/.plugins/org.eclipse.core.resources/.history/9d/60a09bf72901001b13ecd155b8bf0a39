@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<project name="AdxWebServicesXmlCC"    default="all" basedir="."> <!-- SERVEUR -->
+
+	<target name="init">
+	  <property name="component.name"     value="AWIS"/>
+
+	</target>
+
+  
+  <target name="wsgenjava_services_all" depends="init" >
+    <antcall target="wsgenservices">
+      <param name="stubid" value="CAdxWebServicesXmlCC.xml"/>
+    </antcall>
+  </target>
+	
+  <target name="all" depends="wsgenjava_services_all" />
+
+   <target name="wsgenservices" depends="init">
+    <echo message="Project=[${project.name}] -- generate stub classes from [${stubid}.wsdl] " />
+	  <axis-wsdl2java 
+	    output="./src"
+	    verbose="true"
+		  url="./wsdl/${stubid}"
+		  serverside="true"
+	  	skeletondeploy="true"
+	  	deployscope="Application"
+		  debug="false" >
+		  <mapping namespace="http://www.adonix.com/WSS" package="com.adonix.wsvc.stubs"/>
+		</axis-wsdl2java>
+  </target>
+  
+	
+</project>

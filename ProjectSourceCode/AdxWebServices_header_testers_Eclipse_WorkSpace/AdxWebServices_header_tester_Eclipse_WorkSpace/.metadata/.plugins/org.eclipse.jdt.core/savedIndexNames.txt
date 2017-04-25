@@ -1,0 +1,3 @@
+D:\WORK\WebServices_Header\AdxWebServices_header_testers_Eclipse_WorkSpace\.metadata\.plugins\org.eclipse.jdt.core\3519875483.index
+D:\WORK\WebServices_Header\AdxWebServices_header_testers_Eclipse_WorkSpace\.metadata\.plugins\org.eclipse.jdt.core\214721061.index
+D:\WORK\WebServices_Header\AdxWebServices_header_testers_Eclipse_WorkSpace\.metadata\.plugins\org.eclipse.jdt.core\1262883138.index

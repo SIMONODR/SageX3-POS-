@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="http://www.adonix.com/WSS" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://www.adonix.com/WSS" xmlns:intf="http://www.adonix.com/WSS" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<!--WSDL created by Apache Axis version: 1.2.1
+Built on Jun 14, 2005 (09:15:57 EDT)-->
+ <wsdl:types>
+  <schema targetNamespace="http://www.adonix.com/WSS" xmlns="http://www.w3.org/2001/XMLSchema">
+   <import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
+   <complexType name="CAdxMessage">
+    <sequence>
+     <element name="message" nillable="true" type="xsd:string"/>
+     <element name="type" nillable="true" type="xsd:string"/>
+    </sequence>
+   </complexType>
+   <complexType name="ArrayOfCAdxMessage">
+    <complexContent>
+     <restriction base="soapenc:Array">
+      <attribute ref="soapenc:arrayType" wsdl:arrayType="impl:CAdxMessage[]"/>
+     </restriction>
+    </complexContent>
+   </complexType>
+   <complexType name="CAdxTechnicalInfos">
+    <sequence>
+     <element name="busy" type="xsd:boolean"/>
+     <element name="changeLanguage" type="xsd:boolean"/>
+     <element name="changeUserId" type="xsd:boolean"/>
+     <element name="flushAdx" type="xsd:boolean"/>
+     <element name="loadWebsDuration" type="xsd:double"/>
+     <element name="nbDistributionCycle" type="xsd:int"/>
+     <element name="poolDistribDuration" type="xsd:double"/>
+     <element name="poolEntryIdx" type="xsd:int"/>
+     <element name="poolExecDuration" type="xsd:double"/>
+     <element name="poolRequestDuration" type="xsd:double"/>
+     <element name="poolWaitDuration" type="xsd:double"/>
+     <element name="processReport" nillable="true" type="xsd:string"/>
+     <element name="processReportSize" type="xsd:int"/>
+     <element name="reloadWebs" type="xsd:boolean"/>
+     <element name="resumitAfterDBOpen" type="xsd:boolean"/>
+     <element name="rowInDistribStack" type="xsd:int"/>
+     <element name="totalDuration" type="xsd:double"/>
+     <element name="traceRequest" nillable="true" type="xsd:string"/>
+     <element name="traceRequestSize" type="xsd:int"/>
+    </sequence>
+   </complexType>
+   <complexType name="CAdxResultXml">
+    <sequence>
+     <element name="messages" nillable="true" type="impl:ArrayOfCAdxMessage"/>
+     <element name="resultXml" nillable="true" type="xsd:string"/>
+     <element name="status" type="xsd:int"/>
+     <element name="technicalInfos" nillable="true" type="impl:CAdxTechnicalInfos"/>
+    </sequence>
+   </complexType>
+  </schema>
+ </wsdl:types>
+
+   <wsdl:message name="getDescriptionResponse">
+
+      <wsdl:part name="getDescriptionReturn" type="impl:CAdxResultXml"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="runXmlResponse">
+
+      <wsdl:part name="runXmlReturn" type="impl:CAdxResultXml"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="runXmlRequest">
+
+      <wsdl:part name="publicName" type="xsd:string"/>
+
+      <wsdl:part name="inputXml" type="xsd:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="getDescriptionRequest">
+
+      <wsdl:part name="publicName" type="xsd:string"/>
+
+   </wsdl:message>
+
+   <wsdl:portType name="CAdxSubProgramXml">
+
+      <wsdl:operation name="runXml" parameterOrder="publicName inputXml">
+
+         <wsdl:input message="impl:runXmlRequest" name="runXmlRequest"/>
+
+         <wsdl:output message="impl:runXmlResponse" name="runXmlResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="getDescription" parameterOrder="publicName">
+
+         <wsdl:input message="impl:getDescriptionRequest" name="getDescriptionRequest"/>
+
+         <wsdl:output message="impl:getDescriptionResponse" name="getDescriptionResponse"/>
+
+      </wsdl:operation>
+
+   </wsdl:portType>
+
+   <wsdl:binding name="CAdxSubProgramXmlSoapBinding" type="impl:CAdxSubProgramXml">
+
+      <wsdlsoap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+      <wsdl:operation name="runXml">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="runXmlRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://www.adonix.com/WSS" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="runXmlResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://www.adonix.com/WSS" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="getDescription">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="getDescriptionRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://www.adonix.com/WSS" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="getDescriptionResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://www.adonix.com/WSS" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+   </wsdl:binding>
+
+   <wsdl:service name="CAdxSubProgramXmlService">
+
+      <wsdl:port binding="impl:CAdxSubProgramXmlSoapBinding" name="CAdxSubProgramXml">
+
+         <wsdlsoap:address location="http://gattazmpro.ech.adx:1898/adxwsvc/services/CAdxSubProgramXml"/>
+
+      </wsdl:port>
+
+   </wsdl:service>
+
+</wsdl:definitions>

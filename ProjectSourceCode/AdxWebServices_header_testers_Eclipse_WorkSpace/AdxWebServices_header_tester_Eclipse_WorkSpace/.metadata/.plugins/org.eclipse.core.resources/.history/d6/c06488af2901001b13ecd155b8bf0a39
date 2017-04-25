@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<project name="WSTSTSERVER"    default="all" basedir="."> <!-- SERVEUR -->
+
+	<target name="init">
+	  <property name="component.name"     value="AWIS"/>
+	  <property name="tomcat.home"    		value="${kTomcatRoot}"/>
+    <property name="develop.name"   		value="X3Web${kVersion}"/>
+    <property name="develop.home"   		value="D:/_devs_intradon/${develop.name}" />
+    <property name="construction.name"	value="+Construction_${component.name}" />
+    <property name="construction.home"	value="${develop.home}\${construction.name}" />
+    
+	  <property name="project.name"   		value="WA_WSTSTSERVER"/>
+	  <property name="project.home"   		value="${develop.home}\${project.name}"/>
+	  
+	  <property name="app.name"       value="WAWSTSTSERVER"/>
+	  <property name="root.drive"     value="D:"/>
+	  <property name="root.name"    	value="+${develop.name}${kSuffixe}"/>
+	  <property name="root.home"    	value="${root.drive}\${root.name}"/>
+    <property name="data.home"    	value="${root.home}\${component.name}\data"/>
+    <property name="tool.home"    	value="${root.home}\${component.name}\tool"/>
+	  <property name="deploy.home"    value="${tool.home}\SERVERS_BASE\webappsx3web\${app.name}"/>
+	  <property name="classes.shared"						value="${develop.home}\SHARED_JAVA\classes"/>
+	  <property name="classes.shared.wax3web"		value="${develop.home}\SHARED_JAVA_WAX3WEB\classes"/>
+	  <property name="classes.shared.x3xlients"	value="${develop.home}\SHARED_JAVA_X3CLIENTS\classes"/>
+	  <property name="classes.shared.adminsrv"	value="${develop.home}\SHARED_JAVA_ADMINSRV\classes"/>
+	  <property name="classes.servlet"					value="${tomcat.home}\lib\servlet.jar"/>
+	  <property name="dist.home"       value="${deploy.home}"/>
+	  <property name="dist.jar"        value="${app.name}.jar"/>
+	  <property name="dist.war"        value="${app.name}.war"/>
+	  <property name="wars.home"       value="${root.home}\_${component.name}_wars"/>
+	  <property name="javadoc.home"    value="${root.home}\_${component.name}_javadoc\${app.name}"/>
+	<property name="webinf.home"     value="${deploy.home}/WEB-INF"/>
+		<property name="webclasses.home" value="${webinf.home}/classes"/>
+		<property name="weblib.home"     value="${webinf.home}/lib"/>
+		<property name="resources.home"  value="${webclasses.home}"/>
+    <property name="sources.home"    value="${root.home}\_${component.name}_src"/>
+    <!-- specifique webapp-->
+    
+    <property name="libaxis.home"    	value="${develop.home}/_LIBS\_LIB_APACHE_AXIS"/>
+    <property name="wtvcserver.home"    	value="${tool.home}/TOOLS/WSVCTESTER"/>
+	</target>
+
+  
+   <target name="wsgenjava_services_all" >
+     <antcall target="wsgenservices">
+      <param name="stubid" value="CAdxObjectListXml.xml"/>
+    </antcall>
+     <antcall target="wsgenservices">
+      <param name="stubid" value="CAdxObjectXml.xml"/>
+    </antcall>
+         <antcall target="wsgenservices">
+      <param name="stubid" value="CAdxSubProgramXml.xml"/>
+    </antcall>
+  </target>
+  
+   <target name="wsgenjava_services_asmx_all" >
+     <antcall target="wsgenservices">
+      <param name="stubid" value="CAdxSubProgramXml.asmx"/>
+    </antcall>
+
+  </target>
+  
+    <target name="wsgenservices" depends="init,test">
+    <echo message="Project=[${project.name}] -- generate stub classes from [${stubid}.wsdl] " />
+	  <axis-wsdl2java 
+	    output="./src"
+	    verbose="true"
+		  url="./wsdl/${stubid}"
+		  serverside="true"
+	  	skeletondeploy="true"
+	  	deployscope="Application"
+		  debug="false" >
+		  <mapping namespace="http://www.adonix.com/WSS" package="com.adonix.awss.servicesasmx"/>
+		</axis-wsdl2java>
+  </target>
+  
+	
+	<!-- # 14w_027 - Fiche 36385 - WS: Signature du stubs dotNet et publication des sources -->
+  <target name="genstubs" depends="prepare,compile">
+  	<antcall target="stubsjava"/>
+  	<antcall target="stubsdotnet"/>
+  </target>
+  		
+	<target name="stubsjava" depends="init">
+		<delete>
+			<fileset dir="stubs" includes="java_*.*" />
+		</delete>
+    <jar jarfile="stubs/java_stubs.zip">
+    	<fileset dir="classes" includes="com/adonix/awss/stubs/*" />
+    </jar>
+		<jar jarfile="stubs/java_stubs_src.zip">
+			<fileset dir="src" includes="com/adonix/awss/stubs/*" />
+		</jar>
+	</target>
+	
+	<target name="stubsdotnet" depends="init">
+		<delete>
+			<fileset dir="stubs" includes="dotnet_*.*" />
+		</delete>
+		<!-- le chemin C:\_Authenticode\Microsoft_cabarc\BIN doit être dans le path ! -->
+		<cab cabfile="stubs/dotnet_stubs.cab"
+		     basedir="dotnet_tester\WAWSVCSERVER_TESTER\WAWSVCSERVER_CLIENT_LIB\bin\Debug" 
+  		   includes="WAWSVCSERVER_CLIENT_LIB.*" />
+
+		<antcall target="signdotnet">
+			<param name="aCabId" value="${project.home}/stubs/dotnet_stubs.cab"/>
+		</antcall>
+		
+    <jar jarfile="stubs/dotnet_stubs.zip">
+    	<fileset dir="dotnet_tester\WAWSVCSERVER_TESTER\WAWSVCSERVER_CLIENT_LIB\bin\Debug" includes="WAWSVCSERVER_CLIENT_LIB.*" />
+    </jar>
+    <jar jarfile="stubs/dotnet_stubs_src.zip">
+    	<fileset dir="dotnet_tester" includes="WAWSVCSERVER_TESTER/**" />
+    </jar>
+	</target>
+	
+	  <target name="signdotnet"  depends="init">
+	  	
+	  	<echo message="Project=[${app.name}] -- dist :${aCabId}" />
+
+			<!--
+			
+			
+				Usage:  SignCode [options] [FileName]
+				Options:
+				 -spc  <file>       Spc file containing software publishing certificates
+				 -v    <pvkFile>    Pvk file name containing the private key
+				 -k    <KeyName>    Key container name
+				 -n    <name>       Text name representing content of the file to be signed
+				 -i    <info>       Place to get more info on content (usually a URL)
+				 -p    <provider>   Name of the cryptographic provider on the system
+				 -y    <type>       Cryptographic provider type to use
+				 -ky   <keytype>    Key type
+				                      <signature|exchange|<integer>>
+				 -$    <authority>  Signing authority of the certificate
+				                      <individual|commercial>
+				                      Default to using certificate's highest capability
+				 -a    <algorithm>  Hashing algorithm for signing
+				                      <md5|sha1>. Default to md5
+				 -t    <URL>        TimeStamp server's http address
+				 -tr   <number>     The # of timestamp trial until succeeds. Default to 1
+				 -tw   <number>     The # of seconds delay between each timestamp. Default to 0
+				 -j    <dllName>    Name of the dll that provides attributes of the signature
+				 -jp   <param>      Parameter to be passed to the dll
+				 -c    <file>       file containing encoded software publishing certificate
+				 -s    <store>      Cert store containing certs. Default to my store
+				 -r    <location>   Location of the cert store in the registry
+				                      <localMachine|currentUser>. Default to currentUser
+				 -sp   <policy>     Add the certification path (chain) or add the certification
+				                    path excluding the root certificate (spcstore).
+				                      <chain|spcstore>. Default to spcstore
+				 -cn   <name>       The common name of the certificate
+				 -sha1 <thumbPrint> The sha1 hash of the certificate
+				 -x                 Do not sign the file.  Only Timestamp the file
+				
+				Note:   To sign with a SPC file, the required options are -spc and -v if
+				        your private key is in a PVK file. If your private key is in a
+				        registry key container, then -spc and -k are the required options.
+
+
+				rem -spc  <file>       Spc file containing software publishing certificates
+				rem -v    <pvkFile>    Pvk file name containing the private key
+				rem -i    <info>       Place to get more info on content (usually a URL)
+				rem -n    <name>       Text name representing content of the file to be signed
+				
+				set SIGNPATH=C:\_Authenticode\Microsoft_codesign
+				set INFO=http://www.adonix.com
+				set PVK=C:\_Authenticode\adonixprivatekey.pvk
+				set SPC=C:\_Authenticode\adonixcredentials.spc
+				set NAME=Adonix x3 HoockOcx
+				set CAB=hookocx.cab
+				set TIMESVC=http://timestamp.verisign.com/scripts/timstamp.dll
+				
+				
+				echo signed component: %NAME%
+				echo signed cab: %CAB%
+				
+				"%SIGNPATH%\Signcode" -i "%INFO%" -n "%NAME%" -spc "%SPC%" -v "%PVK%" -t "%TIMESVC%" "%CAB%"
+			-->
+			
+			
+		  <property name="SIGNPATH" value="C:\_Authenticode\Microsoft_codesign" />
+		  <property name="INFO"    	value="http://www.adonix.com" />
+		  <property name="PVK"    	value="C:\_Authenticode\adonix_20060130_privatekey.pvk" />
+		  <property name="SPC"    	value="C:\_Authenticode\adonix_20060130.spc" />
+		  <property name="NAME"    	value="Adonix ws client lib" />
+		  <property name="CAB"    	value="${aCabId}" />
+		  <property name="TIMESVC"  value="http://timestamp.verisign.com/scripts/timstamp.dll" />
+		  <property name="commande"  value="${SIGNPATH}\Signcode" />
+
+	    <echo message="" />	
+		  <echo message="COMMANDE:" />	
+		  <echo message="${commande}  -i ${INFO} -n ${NAME} -spc ${SPC} -v ${PVK} -t ${TIMESVC} ${CAB}" />
+		  <echo message="" />	
+		  <echo message="ATTENTION:" />	
+		  <echo message="- le mot de passe de la cle prive [adonix_20060130_privatekey.pvk] est [ADONIXGRENOBLE]" />
+		  <echo message="- il faut utiliser un proxy auto signe (cf. proxomitron) pour que l'outil 'Signcode'" />
+		  <echo message="  puisse atteindre le site de verisign 'http://timestamp.verisign.com' sans demander" />
+		  <echo message="  de mot de passe" />
+	    <echo message="" />	
+		  <echo message="RESULTAT:" />	
+		<exec dir="${deploy.home}" executable="${commande}" >
+			<arg value="-i"/>
+			<arg value="${INFO}"/>
+		  <arg value="-n" />
+		  <arg value="${NAME}"/>
+		  <arg value="-spc"/>
+		  <arg value="${SPC}" />
+		  <arg value="-v" />
+		  <arg value="${PVK}" />
+		  <arg value="-t" />
+		  <arg value="${TIMESVC}" />
+		  <arg value="${CAB}" />
+		</exec>
+
+		 <echo message="Test signature  de : '${NAME}' (${CAB})" />
+		 <echo message="" />	
+		 <echo message="RESULTAT:" />	
+		 
+		<exec dir="${deploy.home}" executable="${SIGNPATH}\chktrust" >
+		  <arg value="-v" />
+		  <arg value="${CAB}" />
+		</exec>
+
+	  </target>
+	
+	
+</project>

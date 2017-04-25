@@ -1,0 +1,38 @@
+package com.adonix.wsvc;
+
+import com.adonix.wsvc.stubs.CAdxCallContext;
+
+/**
+ * @author Adonix Grenoble
+ *
+ */
+public class CServiceAdx {
+	CActivityViewer pActivityViewer;
+
+	boolean pActivityViewerOn;
+
+	String pEndpointAddress;
+
+	String pObjId;
+
+	CAdxCallContext pServiceAdxCallContext;
+
+	/**
+	 * @param aActivityViewer
+	 * @param aObjId
+	 * @param aUrl
+	 * @param aCtx
+	 * @throws Exception
+	 */
+	public CServiceAdx(CActivityViewer aActivityViewer, String aObjId,
+			String aUrl, CServiceAdxCallContext aCtx) throws Exception {
+
+		pActivityViewerOn = (aActivityViewer != null && aActivityViewer
+				.isTraceOn());
+		pActivityViewer = aActivityViewer;
+		pObjId = aObjId;
+		pServiceAdxCallContext = aCtx;
+		pEndpointAddress = aUrl;
+
+	}
+}

@@ -1,0 +1,44 @@
+package com.adonix.wsvc;
+
+import com.adonix.wsvc.stubs.CAdxCallContext;
+import com.adonix.wsvc.stubs.CAdxResultXml;
+import com.adonix.wsvc.stubs.CAdxWebServiceXmlCCServiceLocator;
+import com.adonix.wsvc.stubs.CAdxWebServiceXmlCC;
+
+public class CServiceAdxObjectList extends CServiceAdx
+
+  public static String URL_SUBPATH = "/services/CAdxWebServiceXmlCC";
+
+
+
+	public CServiceAdxObjectList(CActivityViewer aActivityViewer,String aObjId,String aUrl,CServiceAdxCallContext aCtx) 
+	{
+		super(aActivityViewer, aObjId, aUrl, aCtx);
+
+
+		if (pActivityViewerOn)
+			pActivityViewer.traceWrite("new CServiceAdxObjectList ok");
+	}
+
+
+
+      public CServiceAdxResult execQuery(CServiceAdxKeys aListKeys, int aListSize) throws Exception
+	{
+		if (pActivityViewerOn)pActivityViewer.traceBeginStep("execQuery");
+
+         CAdxResultXml wAdxResultXml = pService.query(getAdxCallContext(), pObjId, aListKeys.getAdxParamsKeys(), aListSize);
+		
+		if (pActivityViewerOn)pActivityViewer.traceEndStep();
+          return new CServiceAdxResult(wAdxResultXml);
+	}
+
+      public CServiceAdxResult execGetDescription() throws Exception
+	{
+		if (pActivityViewerOn)pActivityViewer.traceBeginStep("getDescription");
+
+         CAdxResultXml wAdxResultXml = pService.getDescription(getAdxCallContext(), pObjId);
+		
+		if (pActivityViewerOn)pActivityViewer.traceEndStep();
+          return new CServiceAdxResult(wAdxResultXml);
+	}
+}

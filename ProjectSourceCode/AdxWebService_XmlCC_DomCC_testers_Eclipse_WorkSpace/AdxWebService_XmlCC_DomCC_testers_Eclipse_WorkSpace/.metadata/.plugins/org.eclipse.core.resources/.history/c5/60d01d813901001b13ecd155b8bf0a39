@@ -1,0 +1,53 @@
+package com.adonix.wsvc;
+
+public class CServiceAdxSubProgram  extends CServiceAdx
+{
+	/**
+	 * @param aActivityViewer
+	 * @param aObjId
+	 * @param aUrl
+	 * @param aCtx
+	 * @throws Exception
+	 */
+	public CServiceAdxSubProgram(CActivityViewer aActivityViewer, String aSpgmId, String aUrl, CServiceAdxCallContext aCtx)
+			throws Exception
+	{
+		super(aActivityViewer, aSpgmId, aUrl, aCtx);
+
+		if (pActivityViewerOn)
+			pActivityViewer.traceWrite("new CServiceAdxSubProgram ok");
+	}
+
+  public CServiceAdxResult execRun(String aDataXml)
+	{
+		if (pActivityViewerOn)pActivityViewer.traceBeginStep("execSpgm");
+
+          CAdxResultXml wAdxResultXml = this.run(getAdxCallContext(), getWsSpgmId(), aDataXml);
+	
+		if (pActivityViewerOn)pActivityViewer.traceEndStep();
+          return new CServiceAdxResult(wAdxResultXml);
+	}
+
+      public CServiceAdxResult execGetDescription() 
+		{
+			if (pActivityViewerOn)pActivityViewer.traceBeginStep("getDescription");
+
+              CAdxResultXml wAdxResultXml = this.getDescription(getAdxCallContext(), getWsSpgmId());
+
+			if (pActivityViewerOn)pActivityViewer.traceEndStep();
+              return new CServiceAdxResult(wAdxResultXml);
+		}
+
+
+
+		public override String ToString()
+		{
+			StringBuilder wSB = new StringBuilder();
+			wSB.Append("Spgm=[").Append(pSpgmId).Append(']');
+			wSB.Append('\n');
+			wSB.Append("url=[").Append(base.Url).Append(']');
+			wSB.Append('\n');
+			wSB.Append("hasCtx=[").Append(pServiceAdxCallContext!=null).Append(']');
+			return wSB.ToString();
+		}
+}

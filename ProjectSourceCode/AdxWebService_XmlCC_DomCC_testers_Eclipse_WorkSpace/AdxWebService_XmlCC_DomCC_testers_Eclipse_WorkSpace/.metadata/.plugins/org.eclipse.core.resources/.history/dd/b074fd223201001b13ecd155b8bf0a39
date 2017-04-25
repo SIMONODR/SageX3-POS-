@@ -1,0 +1,101 @@
+package com.adonix.wsvc;
+
+import com.adonix.util.CStringFacilities;
+import java.util.Stack;
+
+public class CActivityViewer 
+{
+	
+	private static int SIZEMAX_LINE = 100;
+	private static CActivityViewer sPostActivityViewer=null;
+
+	public static void setPostFormActivityViewer(CActivityViewer aActivityViewer)
+	{
+		sPostActivityViewer = aActivityViewer;
+	}
+
+	public static CActivityViewer getPostFormActivityViewer()
+	{
+		return sPostActivityViewer;
+	}
+
+	private int pSizeLine = SIZEMAX_LINE;
+	private Stack pStackStepLine= new Stack();
+
+	public CActivityViewer()
+	{
+	}
+
+	public void setSizeLine(int aSizeLine)
+	{
+		pSizeLine = aSizeLine;
+	}
+
+	public void traceWriteDescr(String aId,String aValue,String aValueB)
+	{
+		traceWriteDescr( aId , aValue + " | " + aValueB );
+	}
+
+	public void traceWriteDescr(String aId,String aValue)
+	{
+		traceWrite( aId + "=[" + aValue + ']');
+	}
+	public void traceWrite(String aLine)
+	{
+		String[]wLines = aLine.Split('\n');
+		int wMax = wLines.Length;
+		int wI = 0;
+		while(wI<wMax)
+		{
+			traceWriteLine( wLines[wI]);
+			wI++;
+		}
+	}
+
+	public void traceWriteLine(String aLine)
+	{
+		String wPrefix = new String(' ',pStackStepLine.size()*2);
+		int wMaxLen = pSizeLine-wPrefix.Length;
+		if (aLine.Length <=wMaxLen)
+		{
+			writeLine(wPrefix + aLine);
+		}
+		else
+		{
+			int wMax = aLine.Length;
+			int wPos = 0;
+			int wLen = 0;
+			while(wPos<wMax)
+			{
+				wLen = (wMax-wPos>wMaxLen)?wMaxLen:wMax-wPos ;
+				writeLine(wPrefix + aLine.Substring(wPos, wLen));
+				wPos += wMaxLen;
+			}
+		}
+	}
+	public abstract void writeLine(String aLine);
+
+	public abstract bool isTraceOn();
+
+	public void traceEndStep()
+	{
+		if (pStackStepLine.Count > 0)
+		{
+			String wLine = (String)pStackStepLine.Pop();
+			traceWrite("End " + wLine);
+		}
+	}
+	public void traceBeginStep()
+	{
+		traceBeginStep(null);
+	}
+	public void traceBeginStep(String aLine)
+	{
+		if (aLine ==null)
+		{
+			aLine = "-";
+		}
+		traceWrite("Begin " + aLine);
+		pStackStepLine.Push(aLine);
+	}
+}

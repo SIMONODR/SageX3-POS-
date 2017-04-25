@@ -1,0 +1,124 @@
+package com.adonix.wsvc;
+
+import com.adonix.wsvc.stubs.CAdxCallContext;
+import com.adonix.wsvc.stubs.CAdxResultXml;
+import com.adonix.wsvc.stubs.CAdxWebServiceXmlCCServiceLocator;
+
+public class CServiceAdxObject extends CAdxWebServiceXmlCCServiceLocator{
+	  public static String URL_SUBPATH = "/services/CAdxWebServiceXmlCC";
+
+		private boolean pActivityViewerOn;
+		private CActivityViewer pActivityViewer;
+		private String pObjId;
+
+		public CServiceAdxCallContext pServiceAdxCallContext;
+
+		public CServiceAdxObject(CActivityViewer aActivityViewer,String aObjId,String aUrl,CServiceAdxCallContext aCtx) 
+		{
+			super.Url = aUrl;
+			this.pActivityViewerOn = (aActivityViewer!=null && aActivityViewer.isTraceOn() );
+			this.pActivityViewer = aActivityViewer;
+			this.pObjId = aObjId;
+          this.pServiceAdxCallContext = aCtx;
+			this.UserAgent=this.GetType().FullName;
+			this.RequestEncoding= System.Text.Encoding.UTF8;
+
+			if (pActivityViewerOn) pActivityViewer.traceWrite("new CServiceAdxObject ok");
+		}
+
+      CAdxCallContext getAdxCallContext()
+      {
+          return pServiceAdxCallContext.getAdxCallContext();
+      }
+
+      public CServiceAdxResult execActionObject(String actionCode, String objectXml)
+		{
+			if (pActivityViewerOn)pActivityViewer.traceBeginStep("execActionObject");
+
+          CAdxResultXml wAdxResultXml = this.actionObject(getAdxCallContext(), pObjId, actionCode, objectXml);
+			
+			if (pActivityViewerOn)pActivityViewer.traceEndStep();
+          return new CServiceAdxResult(wAdxResultXml);
+		}
+
+
+      public CServiceAdxResult execActionObject(String actionCode, CServiceAdxKeys aObjectKeys)
+		{
+			if (pActivityViewerOn)pActivityViewer.traceBeginStep("execActionObject");
+
+          com.adonix.wsvc.CAdxResultXml wAdxResultXml = this.actionObject(getAdxCallContext(), pObjId, actionCode, aObjectKeys.getAdxParamsKeys());
+			
+			if (pActivityViewerOn)pActivityViewer.traceEndStep();
+          return new CServiceAdxResult(wAdxResultXml);
+		}
+
+      public CServiceAdxResult execDelete(CServiceAdxKeys aObjectKeys)
+		{
+			if (pActivityViewerOn)pActivityViewer.traceBeginStep("execDelete");
+
+          com.adonix.wsvc.CAdxResultXml wAdxResultXml = this.delete(getAdxCallContext(), pObjId, aObjectKeys.getAdxParamsKeys());
+			
+			if (pActivityViewerOn)pActivityViewer.traceEndStep();
+          return new CServiceAdxResult(wAdxResultXml);
+		}
+
+      public CServiceAdxResult execGetDescription()
+		{
+			if (pActivityViewerOn)pActivityViewer.traceBeginStep("execGetDescription");
+
+          com.adonix.wsvc.CAdxResultXml wAdxResultXml = this.getDescription(getAdxCallContext(), pObjId);
+			
+			if (pActivityViewerOn)pActivityViewer.traceEndStep();
+          return new CServiceAdxResult(wAdxResultXml);
+		}
+
+      public CServiceAdxResult execModify(CServiceAdxKeys aObjectKeys, String objectXml)
+		{
+			if (pActivityViewerOn)pActivityViewer.traceBeginStep("execModify");
+
+          com.adonix.wsvc.CAdxResultXml wAdxResultXml = this.modify(getAdxCallContext(), pObjId, aObjectKeys.getAdxParamsKeys(), objectXml);
+			
+			if (pActivityViewerOn)pActivityViewer.traceEndStep();
+          return new CServiceAdxResult(wAdxResultXml);
+		}
+
+      public CServiceAdxResult execRead(CServiceAdxKeys aObjectKeys)
+		{
+			if (pActivityViewerOn)pActivityViewer.traceBeginStep("execRead");
+
+          com.adonix.wsvc.CAdxResultXml wAdxResultXml = this.read(getAdxCallContext(), pObjId, aObjectKeys.getAdxParamsKeys());
+			
+			if (pActivityViewerOn)pActivityViewer.traceEndStep();
+          return new CServiceAdxResult(wAdxResultXml);
+		}
+
+      public CServiceAdxResult execSave(String objectXml)
+		{
+			if (pActivityViewerOn)pActivityViewer.traceBeginStep("execSave");
+
+          com.adonix.wsvc.CAdxResultXml wAdxResultXml = this.save(getAdxCallContext(), pObjId, objectXml);
+			
+			if (pActivityViewerOn)pActivityViewer.traceEndStep();
+          return new CServiceAdxResult(wAdxResultXml);
+		}
+
+      public CServiceAdxResult execDeleteLines(CServiceAdxKeys aObjectKeys, String blocKey, String[] lineKey)
+		{
+			if (pActivityViewerOn)pActivityViewer.traceBeginStep("execInsertLines");
+
+          com.adonix.wsvc.CAdxResultXml wAdxResultXml = this.deleteLines(getAdxCallContext(), pObjId, aObjectKeys.getAdxParamsKeys(), blocKey, lineKey);
+			
+			if (pActivityViewerOn)pActivityViewer.traceEndStep();
+          return new CServiceAdxResult(wAdxResultXml);
+		}
+
+      public CServiceAdxResult execInsertLines(CServiceAdxKeys aObjectKeys, String blocKey, String lineKey, String lineXml)
+		{
+			if (pActivityViewerOn)pActivityViewer.traceBeginStep("execInsertLines");
+
+          com.adonix.wsvc.CAdxResultXml wAdxResultXml = this.insertLines(getAdxCallContext(), pObjId, aObjectKeys.getAdxParamsKeys(), blocKey, lineKey, lineXml);
+			
+			if (pActivityViewerOn)pActivityViewer.traceEndStep();
+          return new CServiceAdxResult(wAdxResultXml);
+		}
+}

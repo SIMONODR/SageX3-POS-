@@ -1,0 +1,23 @@
+/**
+ * CAdxWebServiceXmlCC.java
+ *
+ * This file was auto-generated from WSDL
+ * by the Apache Axis 1.2.1 Jun 14, 2005 (09:15:57 EDT) WSDL2Java emitter.
+ */
+
+package com.adonix.wsvc.stubs;
+
+public interface CAdxWebServiceXmlCC extends java.rmi.Remote {
+    public com.adonix.wsvc.stubs.CAdxResultXml run(com.adonix.wsvc.stubs.CAdxCallContext callContext, java.lang.String publicName, java.lang.String inputXml) throws java.rmi.RemoteException;
+    public com.adonix.wsvc.stubs.CAdxResultXml save(com.adonix.wsvc.stubs.CAdxCallContext callContext, java.lang.String publicName, java.lang.String objectXml) throws java.rmi.RemoteException;
+    public com.adonix.wsvc.stubs.CAdxResultXml delete(com.adonix.wsvc.stubs.CAdxCallContext callContext, java.lang.String publicName, com.adonix.wsvc.stubs.CAdxParamKeyValue[] objectKeys) throws java.rmi.RemoteException;
+    public com.adonix.wsvc.stubs.CAdxResultXml read(com.adonix.wsvc.stubs.CAdxCallContext callContext, java.lang.String publicName, com.adonix.wsvc.stubs.CAdxParamKeyValue[] objectKeys) throws java.rmi.RemoteException;
+    public com.adonix.wsvc.stubs.CAdxResultXml query(com.adonix.wsvc.stubs.CAdxCallContext callContext, java.lang.String publicName, com.adonix.wsvc.stubs.CAdxParamKeyValue[] objectKeys, int listSize) throws java.rmi.RemoteException;
+    public com.adonix.wsvc.stubs.CAdxResultXml getDescription(com.adonix.wsvc.stubs.CAdxCallContext callContext, java.lang.String publicName) throws java.rmi.RemoteException;
+    public com.adonix.wsvc.stubs.CAdxResultXml modify(com.adonix.wsvc.stubs.CAdxCallContext callContext, java.lang.String publicName, com.adonix.wsvc.stubs.CAdxParamKeyValue[] objectKeys, java.lang.String objectXml) throws java.rmi.RemoteException;
+    public com.adonix.wsvc.stubs.CAdxResultXml actionObject(com.adonix.wsvc.stubs.CAdxCallContext callContext, java.lang.String publicName, java.lang.String actionCode, com.adonix.wsvc.stubs.CAdxParamKeyValue[] objectKeys) throws java.rmi.RemoteException;
+    public com.adonix.wsvc.stubs.CAdxResultXml actionObject(com.adonix.wsvc.stubs.CAdxCallContext callContext, java.lang.String publicName, java.lang.String actionCode, java.lang.String objectXml) throws java.rmi.RemoteException;
+    public com.adonix.wsvc.stubs.CAdxResultXml deleteLines(com.adonix.wsvc.stubs.CAdxCallContext callContext, java.lang.String publicName, com.adonix.wsvc.stubs.CAdxParamKeyValue[] objectKeys, java.lang.String blocKey, java.lang.String[] lineKeys) throws java.rmi.RemoteException;
+    public com.adonix.wsvc.stubs.CAdxResultXml insertLines(com.adonix.wsvc.stubs.CAdxCallContext callContext, java.lang.String publicName, com.adonix.wsvc.stubs.CAdxParamKeyValue[] objectKeys, java.lang.String blocKey, java.lang.String lineKey, java.lang.String lineXml) throws java.rmi.RemoteException;
+    public com.adonix.wsvc.stubs.CAdxResultXml getDataXmlSchema(com.adonix.wsvc.stubs.CAdxCallContext callContext, java.lang.String publicName) throws java.rmi.RemoteException;
+}

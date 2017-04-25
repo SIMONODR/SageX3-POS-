@@ -1,0 +1,59 @@
+package com.adonix.wsvc;
+
+import com.adonix.wsvc.stubs.CAdxCallContext;
+
+public class CServiceAdxCallContext extends CAdxCallContext {
+
+
+    public static CServiceAdxCallContext buildAdxCallContext(CActivityViewer aActivityViewer, String aCodeLang, String aCodeUser, String aPassword, String aPoolAlias, String aRequestConfig)
+	{ 
+		bool wActivityViewerOn = (aActivityViewer!=null && aActivityViewer.isTraceOn());
+		if (wActivityViewerOn)aActivityViewer.traceBeginStep("buildCallingContext");
+
+        CAdxCallContext wAdxCallContext = new CAdxCallContext();
+        wAdxCallContext.codeLang = aCodeLang;
+        wAdxCallContext.codeUser = aCodeUser;
+        wAdxCallContext.password = aPassword;
+        wAdxCallContext.poolAlias = aPoolAlias;
+        wAdxCallContext.requestConfig = aRequestConfig;
+
+        CServiceAdxCallContext wServiceAdxCallContext = new CServiceAdxCallContext(wAdxCallContext);
+		if (wActivityViewerOn)
+		{
+            aActivityViewer.traceWrite(wServiceAdxCallContext.dump());
+			aActivityViewer.traceEndStep();
+		}
+        return wServiceAdxCallContext;
+	}
+
+    private CAdxCallContext pAdxCallContext;
+
+    CServiceAdxCallContext(CAdxCallContext aAdxCallContext)
+    {
+        pAdxCallContext = aAdxCallContext;
+        codeLang = pAdxCallContext.codeLang;
+        codeUser = pAdxCallContext.codeUser;
+        password = pAdxCallContext.password;
+        poolAlias = pAdxCallContext.poolAlias;
+        requestConfig = pAdxCallContext.requestConfig;
+    }
+	public  String dump()
+	{
+		StringBuilder wSB = new StringBuilder();
+		wSB.Append("codeLang=[").Append(this.codeLang).Append(']');
+		wSB.Append('\n');
+		wSB.Append("codeUser=[").Append(this.codeUser).Append(']');
+		wSB.Append('\n');
+		wSB.Append("password=[").Append(this.password).Append(']');
+		wSB.Append('\n');
+		wSB.Append("poolAlias=[").Append(this.poolAlias).Append(']');
+		wSB.Append('\n');
+		wSB.Append("requestConfig=[").Append(this.requestConfig).Append(']');
+		return wSB.ToString();
+	}
+
+    public CAdxCallContext getAdxCallContext()
+    {
+        return pAdxCallContext;
+    }
+}

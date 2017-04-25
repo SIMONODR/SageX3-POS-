@@ -1,0 +1,5 @@
+package com.adonix.wsvc.tester;
+
+public class CActivityViewerTraceCli {
+
+}

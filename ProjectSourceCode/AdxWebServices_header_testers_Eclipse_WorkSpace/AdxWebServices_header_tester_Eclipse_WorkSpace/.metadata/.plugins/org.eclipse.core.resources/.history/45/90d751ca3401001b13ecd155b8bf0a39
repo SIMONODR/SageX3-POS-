@@ -1,0 +1,66 @@
+package com.adonix.wsvc;
+
+import com.adonix.wsvc.stubs.CAdxResultXml;
+
+public class CServiceAdxResult extends CAdxResultXml {
+	  public CServiceAdxResult(CAdxResultXml aAdxResultXml)
+      {
+          setMessages ( aAdxResultXml.getMmessages());
+          setResultXml ( aAdxResultXml.getResultXml());
+          setStatus ( aAdxResultXml.getStatus());
+          setTechnicalInfos( aAdxResultXml.getTechnicalInfos());
+      }
+
+		public String dump()
+		{
+			StringBuilder wSB = new System.Text.StringBuilder();
+
+			addDescrInSB(wSB,"Status", this.status.ToString() );
+          bool wHasStatus = (this.status > -1);
+			wSB.Append('\n');
+			addDescrInSB(wSB,"HasValidStatus", wHasStatus.ToString() );
+
+			if (wHasStatus)
+			{
+              int wNbMess = this.messages.Length;
+				wSB.append('\n');
+				addDescrInSB(wSB,"nbMess", wNbMess.ToString());
+		
+				int wI = 0;
+				while(wI < wNbMess)
+				{
+					wSB.append('\n');
+                  addDescrInSB(wSB, wI.ToString(), this.messages[wI].type, this.messages[wI].message);
+					wI++;
+				}
+
+              String wResultXml = this.resultXml;
+				boolean wHasResultXml = (wResultXml!=null);
+				addDescrInSB(wSB,"HasResultXml", wHasResultXml.ToString() );
+				if (wHasResultXml)
+				{
+					wSB.Append('\n');
+					addDescrInSB(wSB,"ResultXml", '\n' + wResultXml + '\n');
+				}
+			}
+			
+			return wSB.ToString();
+		}
+		private static StringBuilder addDescrInSB(StringBuilder aSB,String aId,String aValue,String aValueB)
+		{
+			return addDescrInSB(aSB,aId,aValue + " | " + aValueB);
+		}
+		private static StringBuilder addDescrInSB(StringBuilder aSB,String aId,String aValue)
+		{
+			if (aSB.Length>0 && aSB.ToString().LastIndexOf('\n')!= aSB.Length-1 )
+			{
+				aSB.Append(' ');
+			}
+			aSB.Append(aId);
+			aSB.Append("=[");
+			aSB.Append(aValue);
+			aSB.Append(']');
+
+			return aSB;
+		}
+}

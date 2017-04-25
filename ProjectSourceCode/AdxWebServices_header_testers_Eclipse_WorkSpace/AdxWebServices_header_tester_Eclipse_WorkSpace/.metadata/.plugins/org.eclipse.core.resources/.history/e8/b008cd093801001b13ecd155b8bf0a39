@@ -1,0 +1,101 @@
+package com.adonix.wsvc;
+
+import com.adonix.util.CStringFacilities;
+import java.util.Stack;
+import java.util.StringTokenizer;
+
+public abstract class CActivityViewer 
+{
+	
+	private static int SIZEMAX_LINE = 100;
+	private static CActivityViewer sPostActivityViewer=null;
+
+	public static void setPostFormActivityViewer(CActivityViewer aActivityViewer)
+	{
+		sPostActivityViewer = aActivityViewer;
+	}
+
+	public static CActivityViewer getPostFormActivityViewer()
+	{
+		return sPostActivityViewer;
+	}
+
+	private int pSizeLine = SIZEMAX_LINE;
+	private Stack pStackStepLine= new Stack();
+
+	public CActivityViewer()
+	{
+	}
+
+	public void setSizeLine(int aSizeLine)
+	{
+		pSizeLine = aSizeLine;
+	}
+
+	public void traceWriteDescr(String aId,String aValue,String aValueB)
+	{
+		traceWriteDescr( aId , aValue + " | " + aValueB );
+	}
+
+	public void traceWriteDescr(String aId,String aValue)
+	{
+		traceWrite( aId + "=[" + aValue + ']');
+	}
+	public void traceWrite(String aLine)
+	{
+		StringTokenizer wST = new StringTokenizer(aLine,"\n");
+		while(wST.hasMoreTokens())
+		{
+			traceWriteLine( wST.nextToken());
+		}
+	}
+
+	public void traceWriteLine(String aLine)
+	{
+		int wNbChar = pStackStepLine.size()*2;
+		String wPrefix = CStringFacilities.buildStringFromChar(' ',wNbChar);
+
+		int wMaxLen = pSizeLine-wPrefix.length();
+		if (aLine.length() <=wMaxLen)
+		{
+			writeLine(wPrefix + aLine);
+		}
+		else
+		{
+			int wMax = aLine.length();
+			int wPos = 0;
+			int wLen = 0;
+			while(wPos<wMax)
+			{
+				wLen = (wMax-wPos>wMaxLen)?wMaxLen:wMax-wPos ;
+				writeLine(wPrefix + aLine.substring(wPos, wPos+wLen));
+				wPos += wMaxLen;
+			}
+		}
+	}
+	public abstract void writeLine(String aLine);
+
+	public abstract boolean isTraceOn();
+
+	public void traceEndStep()
+	{
+		if (pStackStepLine.size() > 0)
+		{
+			String wLine = (String)pStackStepLine.pop();
+			traceWrite("End " + wLine);
+		}
+	}
+	public void traceBeginStep()
+	{
+		traceBeginStep(null);
+	}
+	public void traceBeginStep(String aLine)
+	{
+		if (aLine ==null)
+		{
+			aLine = "-";
+		}
+		traceWrite("Begin " + aLine);
+		pStackStepLine.push(aLine);
+	}
+}
